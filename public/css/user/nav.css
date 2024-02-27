@@ -1,0 +1,105 @@
+
+.main-navbar .top-navbar{
+    background-color: 	#ABB2B9;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+.main-navbar .top-navbar .brand-name{
+    color: #fff;
+}
+.main-navbar .top-navbar .nav-link{
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+}
+.main-navbar .top-navbar .dropdown-menu{
+    padding: 0px 0px;
+    border-radius: 0px;
+}
+.main-navbar .top-navbar .dropdown-menu .dropdown-item{
+    padding: 8px 16px;
+    border-bottom: 1px solid #ccc;
+    font-size: 14px;
+}
+.main-navbar .top-navbar .dropdown-menu .dropdown-item i{
+    width: 20px;
+    text-align: center;
+    color: #2874f0;
+    font-size: 14px;
+}
+.main-navbar .navbar{
+    padding: 0px;
+    background-color: #ddd;
+}
+.main-navbar .navbar .nav-item .nav-link{
+    padding: 8px 20px;
+    color: #000;
+    font-size: 15px;
+    font-family: cursive;
+}
+.navbar{
+  margin-bottom: 0 !important;
+}
+
+@media only screen and (max-width: 600px) {
+    .main-navbar .top-navbar .nav-link{
+        font-size: 12px;
+        padding: 8px 10px;
+    }
+}
+
+/* ...................search.................. */
+
+:root {
+  --rad: .7rem;
+  --dur: .3s;
+  --color-dark: #2f2f2f;
+  --color-light: #fff;
+  --color-brand: #57bd84;
+  --font-fam: 'Lato', sans-serif;
+  --height: 3rem;
+  --btn-width: 4rem;
+  --bez: cubic-bezier(0, 0, 0.43, 1.49);
+}
+
+#SearchForm {
+  position: relative;
+  width: 19rem;
+  background: var(--color-brand);
+  border-radius: var(--rad);
+}
+.searchInput, .searchBtn {
+  height: var(--height);
+  font-family: var(--font-fam);
+  border: 0;
+  color: black;
+  font-size: 1.3rem;
+}
+.searchInput[type="search"] {
+  outline: 0; 
+  background: var(--color-light);
+  padding: 0 1.6rem;
+  border-radius: var(--rad);
+  appearance: none; 
+  transition: all var(--dur) var(--bez);
+  transition-property: width, border-radius;
+  /* z-index: 1; */
+  position: relative;
+}
+.searchBtn {
+  display: none; 
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--btn-width);
+  font-weight: bold;
+  background: var(--color-brand);
+  border-radius: 0 var(--rad) var(--rad) 0;
+}
+.searchInput:not(:placeholder-shown) {
+  border-radius: var(--rad) 0 0 var(--rad);
+  width: calc(100% - var(--btn-width));
+  + button {
+    display: block;
+  }
+}

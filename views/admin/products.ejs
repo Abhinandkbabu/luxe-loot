@@ -1,0 +1,118 @@
+<%- include('../layouts/adminHeader'); %>
+
+<div class="site-wrap">
+
+    <nav class="site-nav">
+  
+        <div class="name">
+          Luxe-loot
+    
+          
+        </div>
+    
+        <ul>
+          <li><a href="/admin">Dashboard</a></li>
+          <li class="active"><a href="/admin/product">Products</a></li>
+          <li><a href="/admin/categories">Categories</a></li>
+          <li><a href="/admin/brands">Brand</a></li>
+          <li><a href="/admin/admins">Admins</a></li>
+          <li><a href="/admin/customer">Customers</a></li>
+          <li><a href="/admin/Banner">Banners</a></li>
+          <li><a href="/admin/payments">Payments</a></li>
+          <li><a href="/admin/orders">Orders</a></li>
+        </ul>
+    
+        <div class="note">
+          <button class="btn"><a href="/admin/logout"></a></button>
+        </div>
+    
+      </nav>
+  
+    <main>
+        <div class="container">
+            <div class="row my-4 ">
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                      <% if (messages.msg) {  %>
+                        <div style="z-index: 2;" id="remove-alert" class="alert alert-dismissible fade show alert-<%=messages.type %>" role="allert">
+                          <strong><%= messages.msg %></strong>
+                      </div>
+                      <% } %>
+                        <table class="table table-stripped text-center" >
+                            <thead>
+                                <tr class="table-secondary">
+                                    <th>ID</th>
+                                    <th>Product</th>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>Brand</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Last Update</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% let i=1 %>
+                               <% for(data of data){ %>
+                                <tr>
+                                    <td><%= i++ %></td>
+                                    <td> <div style="width: 100px;height: 100px;margin-right: 10px;"><img class="card-img-top"
+                                        style="height: 90px;width: 90px;" src="/uploads/<%= data.images[0] %>"
+                                        alt="Card image cap"></div>
+                                    </td>
+                                    <td><%= data.productName %></td>
+                                    <td><%= data?.category?.Name %></td>
+                                    <td><%= data?.brand?.Name %></td>
+                                    <td> <span>Price: <%=data.price%></span><br><br>
+                                        <span>Offer Price: <%= data.discountPrice %></span>
+                                    </td>
+                                    <td><%= data.stock %></td>
+                                    <% const date = new Date(data.updatedAt);
+                                    const year = date.getFullYear();
+                                    const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
+                                    const day = String(date.getDate()).padStart(2, "0");
+                                    const formattedDate = `${day}-${month}-${year}`;
+                                      %>
+                                    <td><%= formattedDate %></td>
+                                    <td>
+                                       <% if(data.status=='Active'){ %> <a href="/admin/blockProduct/<%- data._id -%>" class="text-success"><button type="button" class="btn btn-danger btn-sm">Block</button></a> <% } %>
+                                        <% if(data.status!='Active'){ %>  <a href="/admin/UnBlockProduct/<%- data._id -%>" class="text-danger"> <button type="button" class="btn btn-success btn-sm">UnBlock</button> </a> <% } %>
+                                    </td>
+                                    <td>
+                                        <a href="/admin/editProduct/<%- data._id -%>"><button class="btn btn-success btn-sm"><i class="fa-solid fa-pen-to-square" style="color: #ffffff;"></i></button></a>
+                                        <a href="/admin/deleteProduct/<%- data._id -%>"><button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash" style="color: #ffffff;"></i></button></a>
+                                    </td>
+                                </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <a href="/admin/addProduct"><button type="button" class="btn btn-primary" >Add Product</button></a>
+        </div>
+    </main>
+  
+  </div>
+
+
+<script>
+const navTabs = document.querySelectorAll("#nav-tabs > a");
+navTabs.forEach((tab) => {
+tab.addEventListener("click", () => {
+navTabs.forEach((tab) => {
+  tab.classList.remove("active");
+});
+tab.classList.add("active");
+});
+});
+</script>
+<!-- ------------------------datatable-------------- -->
+        <script>
+          $(document).ready(function () {
+            $('.table').DataTable();
+          });
+        </script>
+<% -include('../layouts/adminFooter') %>

@@ -1,0 +1,91 @@
+<%- include('../layouts/adminHeader'); %>
+<div class="site-wrap">
+
+    <nav class="site-nav">
+  
+      <div class="name">
+        Luxe-loot
+  
+        
+      </div>
+  
+      <ul>
+        <li><a href="/admin">Dashboard</a></li>
+        <li><a href="/admin/product">Products</a></li>
+        <li><a href="/admin/categories">Categories</a></li>
+        <li class="active"><a href="/admin/brands">Brand</a></li>
+        <li><a href="/admin/admins">Admins</a></li>
+        <li><a href="/admin/customer">Customers</a></li>
+        <li><a href="/admin/Banner">Banners</a></li>
+        <li><a href="/admin/payments">Payments</a></li>
+        <li><a href="/admin/orders">Orders</a></li>
+      </ul>
+  
+      <div class="note">
+        <button class="btn"><a href="/admin/logout"></a></button>
+      </div>
+  
+    </nav>
+  
+    <main>
+        <div class="container p-5">
+            <div class="row my-4 ">
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <% if (messages.msg) {  %>
+                            <div style="z-index: 2;" id="remove-alert" class="alert alert-dismissible fade show alert-<%=messages.type %>" role="allert">
+                              <strong><%= messages.msg %></strong>
+                          </div>
+                          <% } %>
+                        <table class="table table-stripped text-center">
+                            <thead>
+                                <tr class="table-secondary">
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% let j=1 %>
+                               <% for(data of brand){ %>
+                                <tr>
+                                    <td><%= j++ %></td>
+                                    <td><%= data.Name %></td>
+                                    <td>
+                                        <a href="/admin/deleteBrand/<%- data._id -%>" style="text-decoration: none;"><button type="button" class="btn btn-danger"><i class="fa-solid fa-minus" style="color: #ffffff;"></i></button></a>
+                                    </td>
+                                </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <a href="/admin/addBrand"><button type="button" class="btn btn-primary">Add Brand</button></a>
+        </div>
+        
+    </main>
+  
+  </div>
+
+  <script>
+    // Function to remove the div after 2 seconds
+    function removeDiv() {
+        var divToRemove = document.getElementById('remove-alert');
+        if (divToRemove) {
+            setTimeout(function() {
+                divToRemove.remove();
+            }, 2000);
+        }
+    }
+    // Call the removeDiv function to start the process
+    removeDiv();
+  </script>   
+        
+    <script>
+        $(document).ready(function () {
+          $('.table').DataTable();
+        });
+      </script>
+   </script>
+<% -include('../layouts/adminFooter') %>

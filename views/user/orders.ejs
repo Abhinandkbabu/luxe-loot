@@ -1,0 +1,59 @@
+<%- include('../layouts/userHeader'); %>
+
+
+<div class="container mt-3">
+    <% order.forEach(orders=>{%> 
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <div>Order id : <%= orders._id %></div>
+          <div>  
+            <a href="/viewOrder/<%= orders._id %>" class="btn active" role="button" aria-pressed="true">Track Order</a>
+        </div>
+        </div>
+                <% orders.products.forEach(product=>{ %>
+                    <div class="border d-flex justify-content-between align-items-center">
+                        <div class="card" style="width: 8rem; display: flex; justify-content: center; align-items: center;">
+                            <img class="card-img-top" src="/uploads/<%= product.ProductId.images[0] %>" alt="Card image cap">
+                        </div>
+                        <div style="width: 10rem; height: 8rem; display: flex; justify-content: center; align-items: center;">
+                            <span>P<%= product.ProductId.productName %></span>
+                        </div>
+                        <div style="width: 8rem; height: 8rem; display: flex; justify-content: center; align-items: center;">
+                           <span>Qty: <%= product.quantity %></span>
+                        </div>
+                        <div style="width: 8rem; height: 8rem; display: flex; justify-content: center; align-items: center;">
+                            <% const price= product.ProductId.price * product.quantity %>
+                            <span>₹<%= price  %></span>
+                        </div>
+
+                        <div style="width: 8rem; height: 8rem; display: flex; justify-content: center; align-items: center;">
+                            <span class="stat badge <%= getOrderStatusBadgeClass(orders.orderStatus) %>">
+                                <%= orders.orderStatus %>
+                            </span>
+                            <% function getOrderStatusBadgeClass(orderStatus) {
+                                switch (orderStatus) {
+                                    case 'Order Processing':
+                                        return 'text-bg-info';
+                                    case 'Order Confirmed':
+                                        return 'text-bg-primary';
+                                    case 'Order Shipped':
+                                        return 'text-bg-warning';
+                                    case 'Order Delivered':
+                                        return 'text-bg-success';
+                                    case 'Cancelled':
+                                        return 'text-bg-danger';
+                                    default:
+                                        return 'text-bg-secondary';
+                                }
+                            } %>
+                        </div>
+                    </div>
+                   
+                    
+                <% }) %> 
+        </div>
+    <%}) %>
+</div>
+
+
+<%- include('../layouts/userFooter') %>

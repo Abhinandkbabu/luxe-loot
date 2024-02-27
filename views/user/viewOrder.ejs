@@ -1,0 +1,185 @@
+<%- include('../layouts/userHeader'); %>
+<link rel="stylesheet" href="/css/user/vieworder.css">
+
+<div class="container mt-3">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <div>Order id : <%= order._id %></div>
+          <div>  
+            <button id="cancelOrderBtn" class="btn active" role="button" aria-pressed="true">Cancel Order</button>
+        </div>
+        </div>
+                <% order.products.forEach(product=>{ %>
+                    <div class="border d-flex justify-content-between align-items-center">
+                        <div class="card" style="width: 8rem; display: flex; justify-content: center; align-items: center;">
+                            <img class="card-img-top" src="/uploads/<%= product.ProductId.images[0] %>" alt="Card image cap">
+                        </div>
+                        <div style="width: 10rem; height: 8rem; display: flex; justify-content: center; align-items: center;">
+                            <span>P<%= product.ProductId.productName %></span>
+                        </div>
+                        <div style="width: 8rem; height: 8rem; display: flex; justify-content: center; align-items: center;">
+                           <span>Qty: <%= product.quantity %></span>
+                        </div>
+                        <div style="width: 8rem; height: 8rem; display: flex; justify-content: center; align-items: center;">
+                            <% const price= product.ProductId.price * product.quantity %>
+                            <span>₹<%= price  %></span>
+                        </div>
+
+                        <div style="width: 8rem; height: 8rem; display: flex; justify-content: center; align-items: center;">
+                            <span class="stat badge <%= getOrderStatusBadgeClass(product.OrderStatus) %>">
+                                <%= product.OrderStatus %>
+                            </span>
+                            <% function getOrderStatusBadgeClass(orderStatus) {
+                                switch (orderStatus) {
+                                    case 'Order Processing':
+                                        return 'text-bg-info';
+                                    case 'Order Confirmed':
+                                        return 'text-bg-primary';
+                                    case 'Order Shipped':
+                                        return 'text-bg-warning';
+                                    case 'Order Delivered':
+                                        return 'text-bg-success';
+                                    case 'Cancelled':
+                                        return 'text-bg-danger';
+                                    default:
+                                        return 'text-bg-secondary';
+                                }
+                            } %>
+                        </div>
+                        <div style="width: 8rem; height: 8rem; display: flex; justify-content: center; align-items: center;">
+                            <% if(product.OrderStatus=='Order Delivered'){%>
+                                <button class="btn active btn-outline-danger cancelProductBtn" data-orderid="<%= order._id %>" data-productid="<%= product.ProductId._id %>" role="button" aria-pressed="true">Return</button>
+                            <%}else{%>
+                                <button class="btn active btn-outline-danger cancelProductBtn" data-orderid="<%= order._id %>" data-productid="<%= product.ProductId._id %>" role="button" aria-pressed="true">Cancel</button>
+                            <%}%>
+                        </div>
+                    </div>
+                   
+                    
+                <% }) %> 
+        </div>
+        <div class="m-5">
+            <ol id="orderTracker" class="progtrckr" data-progtrckr-steps="4">
+                <li id="orderProcessing" class="progtrckr-done">Order Processing</li><!--
+             --><li id="orderPlaced" class="progtrckr-done">Order confirmed</li><!--
+             --><li id="orderShipped" class="progtrckr-todo">Shipped</li><!--
+             --><li id="orderDelivered" class="progtrckr-todo">Delivered</li>
+            </ol>
+        </div>
+        
+        
+        <script>
+            const orderStatus = "<%= order.status %>";
+        
+        // Function to get the class based on order status
+        function getOrderStatusClass(status) {
+            return orderStatus === status ? 'progtrckr-done' : 'progtrckr-todo';
+        }
+        
+        // Update the class of list items based on the order status
+        ['Order Processing', 'Order Placed', 'Order Shipped', 'Order Delivered'].forEach(status => {
+            const element = document.getElementById(status.toLowerCase());
+            if (element) {
+                element.className = getOrderStatusClass(status);
+            }
+        });
+        
+        const cancelProductButtons = document.querySelectorAll('.cancelProductBtn');
+        cancelProductButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent the default action of the button
+        
+        const orderId = this.getAttribute('data-orderid');
+        const productId = this.getAttribute('data-productid');
+        
+        // Display SweetAlert confirmation dialog
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You are about to cancel this product.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, cancel it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Make an AJAX request to cancel the product
+                fetch(`/singleCancel/${orderId}/${productId}`, {
+                    method: 'GET'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Display a Toastify alert with the response message
+                    Swal.fire({
+                    title: 'Order Cancelled',
+                    text: data.message,
+                    icon: 'success',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+                })
+                .catch(error => {
+                    // Display an error Toastify alert if the request fails
+                    Toastify({
+                        text: 'Failed to cancel product. Please try again later.',
+                        duration: 3000,
+                        backgroundColor: "linear-gradient(to right, #ff416c, #ff4b2b)",
+                    }).showToast();
+                });
+            }
+        });
+        });
+        });
+        
+        
+        //cancel  
+        document.getElementById('cancelOrderBtn').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent the default action of the button
+        
+        // Display a SweetAlert confirmation dialog
+        Swal.fire({
+        title: 'Are you sure?',
+        text: 'You are about to cancel this order.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, cancel it!'
+        }).then((result) => {
+        if (result.isConfirmed) {
+            const orderId = "<%= order._id %>";
+        
+            // Make an AJAX request to cancel the order
+            fetch(`/cancelOrder/${orderId}`, {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display a SweetAlert after the cancellation is confirmed
+                Swal.fire({
+                    title: 'Order Cancelled',
+                    text: data.message,
+                    icon: 'success',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+            })
+            .catch(error => {
+                // Display an error SweetAlert if the request fails
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Failed to cancel order. Please try again later.',
+                    icon: 'error',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+            });
+        }
+        });
+        });
+        </script>
+        
+</div>
+
+
+<%- include('../layouts/userFooter') %>

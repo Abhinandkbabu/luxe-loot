@@ -1,0 +1,91 @@
+<%- include('../layouts/userHeader')  %>
+
+<link rel="stylesheet" href="../../css/user/userProfile.css">
+
+<div class="container mt-5"> 
+    <div class="row">  
+        <div class="col-md-4">      
+            <div class="portlet light profile-sidebar-portlet bordered">
+                <div class="profile-userpic">
+                    <img src="https://bootdey.com/img/Content/avatar/avatar6.png" class="img-responsive" alt=""> </div>
+                <div class="profile-usertitle">
+                    <div class="profile-usertitle-name"> <%= userdata.Name %> </div>
+                </div>
+                <div class="profile-usermenu">
+                    <ul role="tablist" style="list-style: none;line-height: 300%;">
+                        <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab" style="text-decoration: none;" >Account</a></li>
+                        <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab"style="text-decoration: none;" >Password</a></li>
+                        <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab"style="text-decoration: none;">Manage Address</a></li>
+                        <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab" style="text-decoration: none;">Available Coupons</a></li>
+                        <li role="presentation"><a href="#referal" aria-controls="settings" role="tab" data-toggle="tab" style="text-decoration: none;">Refer & Earn</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8"> 
+            <div class="portlet light bordered">
+                <div class="portlet-title tabbable-line">
+                    <div class="caption caption-md">
+                        <i class="icon-globe theme-font hide"></i>
+                        <span class="caption-subject font-blue-madison bold uppercase">Your info</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div>
+                    
+                        <!-- Nav tabs -->
+                        
+                    
+                        <!-- Tab panes -->
+                        <!-- -------edit Name---------- -->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="home">
+                                <form>
+                                  <div class="form-group m-2">
+                                    <label for="inputName">Name</label>
+                                    <input type="text" class="form-control" id="inputName" placeholder="<%= userdata.Name %>" disabled>
+                                  </div>
+                                  <div class="form-group m-2">
+                                    <label for="exampleInputEmail1">Email address</label>
+                                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="<%= userdata.Email %>" disabled>
+                                  </div>
+                                  <button type="button" class="btn btn-info edit-button ms-2"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button type="submit" class="btn btn-default save-button btn-success ms-2" style="display: none;"><i class="fa-solid fa-floppy-disk"></i></button>
+                                </form>
+                            </div>
+                            <!-- ----------------end edit name------------------ -->
+                            <!-- ----------------change password---------------------- -->
+                            <div role="tabpanel" class="tab-pane" id="profile">
+                                <form>
+                                    <div class="form-group">
+                                      <label for="inputName">Password</label>
+                                      <input type="password" class="form-control" name="Password"  id="password" required oninput="validateExistingPassword()">
+                                    </div>
+                                    <div class="form-group">
+                                      <label for="exampleInputEmail1">New Password</label>
+                                      <input type="password" class="form-control" name="Password"  id="new-password" required oninput="validatePassword()">
+                                    </div>
+                                    <div class="form-group">
+                                      <label for="exampleInputEmail1">Confirm New Password</label>
+                                      <input type="password" class="form-control" name="ConfirmPassword" id="repeat-password" required oninput="validateRepeatPassword()">
+                                    </div>
+                                     <div >
+                                        <span id="error" class="text-warning"></span>
+                                     </div>
+                                  <button type="submit" class="btn btn-default btn-success update-password"><i class="fa-solid fa-floppy-disk"></i></button>
+                                  </form>
+                            </div>
+                            <!-- ----------------------------end change password---------------------- -->
+                            <div role="tabpanel" class="tab-pane" id="messages">Messages</div>
+                            <div role="tabpanel" class="tab-pane" id="settings">Settings</div>
+                            <div role="tabpanel" class="tab-pane" id="referal">ref</div>
+                        </div>
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+<script src="../../js/profilePageAjax.js"></script>
+<%- include('../layouts/userFooter') %>

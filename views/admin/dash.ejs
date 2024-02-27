@@ -1,0 +1,49 @@
+
+    <link rel="stylesheet" type="text/css" href="/css/Admin/sidebar.css">
+    <div class="site-wrap">
+
+        <nav class="site-nav">
+      
+          <div class="name">
+            Luxe-loot
+      
+            
+          </div>
+      
+          <ul>
+            <li class="active"><a href="/admin">Dashboard</a></li>
+            <li><a href="/admin/product">Products</a></li>
+            <li><a href="/admin/categories">Categories</a></li>
+            <li><a href="/admin/brands">Brand</a></li>
+            <li><a href="/admin/admins">Admins</a></li>
+            <li><a href="/admin/customer">Customers</a></li>
+            <li><a href="/admin/Banner">Banners</a></li>
+            <li><a href="/admin/payments">Payments</a></li>
+            <li><a href="/admin/orders">Orders</a></li>
+          </ul>
+      
+          <div class="note">
+            <button class="btn"><a href="/admin/logout"></a></button>
+          </div>
+      
+        </nav>
+      
+        <main>
+            
+        </main>
+      
+      </div>
+
+
+<script>
+    const navTabs = document.querySelectorAll("#nav-tabs > a");
+navTabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    navTabs.forEach((tab) => {
+      tab.classList.remove("active");
+    });
+    tab.classList.add("active");
+  });
+});
+</script>
+

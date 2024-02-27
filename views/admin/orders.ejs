@@ -1,0 +1,188 @@
+<%- include('../layouts/adminHeader'); %>
+<div class="site-wrap">
+
+    <nav class="site-nav">
+  
+      <div class="name">
+        Luxe Loot
+  
+        
+      </div>
+  
+      <ul>
+        <li><a href="/admin">Dashboard</a></li>
+        <li><a href="/admin/product">Products</a></li>
+        <li><a href="/admin/categories">Categories</a></li>
+        <li><a href="/admin/brands">Brand</a></li>
+        <li><a href="/admin/admins">Admins</a></li>
+        <li><a href="/admin/customer">Customers</a></li>
+        <li><a href="/admin/Banner">Banners</a></li>
+        <li><a href="/admin/payments">Payments</a></li>
+        <li class="active"><a href="/admin/orders">Orders</a></li>
+
+      </ul>
+  
+      <div class="note">
+        <a href="/admin/logout"><button class="btn">Logout</button></a>
+      </div>
+  
+    </nav>
+    <main>
+      <div class="container p-5">
+          <div class="row my-4 ">
+              <div class="col-lg-12">
+                  <div class="table-responsive" id="table-orders">
+                      <table class="table table-stripped text-center ">
+                          <thead>
+                              <tr class="table-secondary">
+                                  <th>No</th>
+                                  <th>Customer</th>
+                                  <th>Order Id</th>
+                                  <th>Purchase Date</th>
+                                  <th>Payment Method</th>
+                                  <th>Total Price</th>
+                                  <th>Status</th>
+                                  <th>Update Status</th>
+                                  <th>Return Request</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <% let i=0 %>
+                              <% for (orders of orders) { %>
+                                  <tr>
+                                      <td><%= i+1 %></td>
+                                      <td><%= orders.address.name %></td>
+                                      <td><%= orders._id %></td>
+                                      <td><%= orders.orderDate.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'medium' }) %></td>
+                                      <td><%= orders.paymentMethod %></td>
+                                      <td><%= orders.totalAmount %></td>
+                                      <td class="order-status p-3">
+                                        <span class="stat badge <%= getOrderStatusBadgeClass(orders.orderStatus) %>">
+                                            <%= orders.orderStatus %>
+                                        </span>
+                                    </td>
+                                    
+                                    
+                                    <% function getOrderStatusBadgeClass(orderStatus) {
+                                      switch (orderStatus) {
+                                          case 'Order Processing':
+                                              return 'text-bg-info';
+                                          case 'Order Confirmed':
+                                              return 'text-bg-primary';
+                                          case 'Order Shipped':
+                                              return 'text-bg-warning';
+                                          case 'Order Delivered':
+                                              return 'text-bg-success';
+                                          case 'Cancelled':
+                                              return 'text-bg-danger';
+                                          default:
+                                              return 'text-bg-secondary';
+                                      }
+                                  } %>
+                                  
+                                    
+                                    
+                                    
+                                      <td>
+                                          <div class="btn-group dropend">
+                                              <button type="button" class="btn btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                  Change Status
+                                              </button>
+                                              <ul class="dropdown-menu">
+                                                  <li><a class="dropdown-item change-status" href="#" data-order-id="<%= orders._id %>" data-status="Order Confirmed">Order Confirmed</a></li>
+                                                  <li><a class="dropdown-item change-status" href="#" data-order-id="<%= orders._id %>" data-status="Order Shipped">Order Shipped</a></li>
+                                                  <li><a class="dropdown-item change-status" href="#" data-order-id="<%= orders._id %>" data-status="Order Delivered">Order Delivered</a></li>
+                                              </ul>
+                                          </div>
+                                      </td>
+                                      <td>no</td>
+                                  </tr>
+                                  <% i++ %>
+                              <% } %>
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </main>
+  
+    
+    
+    <!-- DataTable Initialization Script -->
+    <script>
+      $(document).ready(function () {
+        $('.table').DataTable();
+      });
+    </script>
+    <script>
+      $(document).ready(function() {
+          $('.change-status').click(function(event) {
+              event.preventDefault();
+  
+              var orderId = $(this).data('order-id');
+              var newStatus = $(this).data('status');
+  
+              $.ajax({
+                  url: '/changeOrderStatus',
+                  method: 'POST',
+                  data: { orderId: orderId, newStatus: newStatus },
+                  success: function(response) {
+                      // Update order status and badge class
+                      var orderRow = $('[data-order-id="' + orderId + '"]').closest('tr');
+                      orderRow.find('.stat').text(newStatus).removeClass('badge-primary badge-info badge-warning badge-success badge-danger');
+  
+                      // Add appropriate badge class based on the new status
+                      switch (newStatus) {
+                          case 'Order Processing':
+                              orderRow.find('.stat').addClass('badge text-bg-info');
+                              break;
+                          case 'Order Confirmed':
+                              orderRow.find('.stat').addClass('badge text-bg-primary');
+                              break;
+                          case 'Order Shipped':
+                              orderRow.find('.stat').addClass('badge text-bg-warning');
+                              break;
+                          case 'Order Delivered':
+                              orderRow.find('.stat').addClass('badge text-bg-success');
+                              break;
+                          case 'Cancelled':
+                              orderRow.find('.stat').addClass('text-bg-danger');
+                              break;
+                          default:
+                              // Handle other cases if needed
+                              break;
+                      }
+                  },
+                  error: function(xhr, status, error) {
+                      console.error('Error changing order status:', error);
+                      alert('Error changing order status. Please try again.');
+                  }
+              });
+          });
+      });
+  </script>
+  
+  <script>
+    function getOrderStatusBadgeClass(orderStatus) {
+        switch (orderStatus) {
+            case 'Order Processing':
+                return 'badge-primary';
+            case 'Order Confirmed':
+                return 'badge-info';
+            case 'Order Shipped':
+                return 'badge-warning';
+            case 'Order Delivered':
+                return 'badge-success';
+            case 'Cancelled':
+                return 'badge-danger';
+            default:
+                return 'badge-secondary';
+        }
+    }
+</script>
+  
+  </div>
+
+
+<%- include('../layouts/adminFooter') %>

@@ -1,0 +1,70 @@
+<%- include('../layouts/adminHeader'); %>
+<div class="site-wrap">
+
+    <nav class="site-nav">
+  
+      <div class="name">
+        Luxe-loot
+  
+        
+      </div>
+  
+      <ul>
+        <li><a href="/admin">Dashboard</a></li>
+        <li><a href="/admin/product">Products</a></li>
+        <li><a href="/admin/categories">Categories</a></li>
+        <li class="active"><a href="/admin/brands">Brand</a></li>
+        <li><a href="/admin/admins">Admins</a></li>
+        <li><a href="/admin/customer">Customers</a></li>
+        <li><a href="/admin/Banner">Banners</a></li>
+        <li><a href="/admin/payments">Payments</a></li>
+        <li><a href="/admin/orders">Orders</a></li>
+      </ul>
+  
+      <div class="note">
+        <button class="btn"><a href="/admin/logout"></a></button>
+      </div>
+  
+    </nav>
+  
+    <main>
+        <div class="justify-content-center align-items-center">
+        <div class="col-md-10 col-lg-6 col-xl-5 order-1 order-lg-2 ">
+            
+            <p class="h6 fw-bold mb-2 px-2 md-4 pt-4">Add Category</p>
+            
+            <form class="mx-md-2" action="/admin/addBrand" method="post" onsubmit="return validateForm()">
+                <div class="d-flex flex-row align-items-center mb-2">
+                    
+                    <div class="form-outline flex-fill mb-0">
+                        <input type="text" name="Name" id="catName" class="form-control" placeholder="Brand Name" required oninput="validateEmail()" />
+                                <div class="error-message text-warning"" id="name-error"></div>
+                    </div>
+                </div>
+                <div class="d-flex mb-lg-4">
+                    <button type="submit" class="btn btn-primary ">Add</button>
+                </div>
+    
+            </form>
+                    
+        </div>
+        </div>       
+        
+    </main>
+  
+  </div>                         
+            
+<script>
+       function validateName() {
+    var nameInput = document.getElementById('catName');
+    var nameRegex = /^[a-zA-Z]+(?: [a-zA-Z]+)?$/;
+    var nameError = document.getElementById('name-error');
+    
+    if (!nameRegex.test(nameInput.value) || nameInput.value.trim() !== nameInput.value) {
+        nameError.innerText = 'Invalid name format! Only one space between words is allowed.';
+    } else {
+        nameError.innerText = '';
+    }
+}
+</script>
+<% -include('../layouts/adminFooter') %>
